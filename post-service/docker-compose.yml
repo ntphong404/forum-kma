@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: forum-kma-db
+
+      # Thiết lập timezone hợp lệ cho Việt Nam
+      TZ: Asia/Ho_Chi_Minh
+      PGTZ: Asia/Ho_Chi_Minh
+
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - post-service-net
+
+  # Giao diện quản lý database (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - post-service-net
+
+volumes:
+  postgres_data:
+
+networks:
+  post-service-net:
+    driver: bridge

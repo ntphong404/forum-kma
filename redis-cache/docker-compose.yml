@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # 1. Redis Server Instance
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    # Mở cổng Redis
+    ports:
+      - "6060:6379"
+    volumes:
+      # Định nghĩa volume để lưu trữ dữ liệu Redis (bền vững)
+      - redis_data:/data
+    networks:
+      - forum-kma-net # Gắn vào mạng chung
+    command: redis-server --appendonly yes # Bật chế độ AOF (luôn lưu dữ liệu)
+
+  # 2. Redis Commander (Tùy chọn - Giao diện quản lý)
+  redis-commander:
+    image: ghcr.io/joeferner/redis-commander:latest
+    container_name: redis-commander
+    environment:
+      # Liên kết tới Redis Server
+      REDIS_HOSTS: redis
+    ports:
+      - "7070:8081" # Truy cập giao diện web tại localhost:8082
+    networks:
+      - forum-kma-net
+
+# Định nghĩa các Volumes và Networks
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  forum-kma-net:
+    external: true # Mạng giao tiếp giữa các services

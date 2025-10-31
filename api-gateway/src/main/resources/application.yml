@@ -1,0 +1,60 @@
+server:
+  port: 8080
+
+gateway:
+  api-prefix: /api
+
+spring:
+  config:
+    import: "classpath:application-jwt.yml"
+
+  application:
+    name: api-gateway
+
+  data:
+    redis:
+      host: localhost
+      port: 6060
+      password: ""
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/auth/**, /api/users/**, /api/roles/**
+
+            - id: post-service
+              uri: lb://post-service
+              predicates:
+                - Path=/api/posts/**, /api/comments/**
+
+            - id: chat-service
+              uri: lb://chat-service
+              predicates:
+                - Path=/api/chat/**
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+internal:
+  gateway:
+    secret-key: "YOUR_VERY_STRONG_INTERNAL_SHARED_SECRET_KEY_12345"

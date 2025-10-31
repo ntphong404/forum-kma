@@ -1,0 +1,33 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: post-service
+  webflux:
+    base-path: /api
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/forum-kma-db?timeZone=Asia/Ho_Chi_Minh
+    username: postgres
+    password: 123456
+
+  data:
+    redis:
+      host: localhost
+      port: 6060
+      password:
+      timeout: 6000ms
+
+  cache:
+    type: redis
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
