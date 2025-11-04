@@ -5,7 +5,6 @@ plugins {
     `maven-publish`
 }
 
-
 group = "com.forum.kma"
 version = "1.0.0"
 description = "common module for Forum-KMA"

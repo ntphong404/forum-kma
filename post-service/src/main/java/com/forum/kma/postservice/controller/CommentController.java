@@ -4,14 +4,11 @@ import com.forum.kma.common.dto.response.ApiResponse;
 import com.forum.kma.postservice.dto.CommentResponse;
 import com.forum.kma.postservice.dto.CreateCommentRequest;
 import com.forum.kma.postservice.mapper.CommentMapper;
-import com.forum.kma.postservice.model.Comment;
 import com.forum.kma.postservice.service.CommentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;

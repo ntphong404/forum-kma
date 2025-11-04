@@ -35,13 +35,23 @@ public class AppStartupRunner implements CommandLineRunner {
             Permission.USER_READ,
             Permission.USER_UPDATE,
             Permission.USER_DELETE,
+
             Permission.ROLE_MANAGEMENT,
+
+            Permission.POST_CREATE,
+            Permission.POST_READ,
+            Permission.POST_DELETE,
             Permission.CONFIG_ACCESS
     );
     Set<String> userPermissions = Permission.getPermissionsAsStrings(
             Permission.USER_READ,
+            Permission.USER_UPDATE,
+            Permission.USER_DELETE,
+
             Permission.POST_CREATE,
-            Permission.POST_READ
+            Permission.POST_READ,
+            Permission.POST_UPDATE,
+            Permission.POST_DELETE
     );
 
 

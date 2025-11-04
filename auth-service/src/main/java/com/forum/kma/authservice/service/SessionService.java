@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.Map;
 
-// ✅ TẠO MỚI: Service chuyên quản lý Redis Hash cho sessions
+// Service chuyên quản lý Redis Hash cho sessions
 @Service
 public class SessionService {
 
@@ -19,7 +19,7 @@ public class SessionService {
     private static final String USER_SESSIONS_PREFIX = "user:sessions:";
 
     // TTL cho HASH (nên bằng TTL của Refresh Token)
-    private static final Duration SESSION_TTL = Duration.ofDays(7);
+    private static final Duration SESSION_TTL = Duration.ofDays(1);
 
     public SessionService(ReactiveRedisTemplate<String, Object> reactiveRedisTemplate) {
         this.reactiveRedisTemplate = reactiveRedisTemplate;

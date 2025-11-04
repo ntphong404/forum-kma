@@ -1,5 +1,7 @@
 package com.forum.kma.authservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.kma.authservice.constant.AuthErrorCode;
 import com.forum.kma.authservice.dto.DeviceInfo;
 import com.forum.kma.authservice.dto.LoginRequest;
@@ -29,10 +31,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -172,23 +171,31 @@ public class AuthService {
     private Mono<Void> addSessionAndCachePerms(String userId, String roleId, String sessionId, DeviceInfo deviceInfo) {
         Duration accessTtl = Duration.ofMillis(jwtProperties.getAccessExpirationMs());
 
-        // 1. Tải Permissions từ DB
-        Mono<Set<String>> permissionsMono = roleRepository.findById(roleId)
-                .map(Role::getPermissions)
+        return roleRepository.findById(roleId)
                 .switchIfEmpty(Mono.error(new AppException(AuthErrorCode.ROLE_NOT_EXISTED)))
-                .map(permissions -> permissions != null ? permissions : Collections.emptySet());
+                .flatMap(role -> {
+                    // Lấy set permission từ DB
+                    Set<String> permissions = role.getPermissions() != null
+                            ? new HashSet<>(role.getPermissions())
+                            : new HashSet<>();
 
-        // 2. Lưu Permissions vào Redis (Dưới dạng Set hoặc String JSON)
-        // Lưu trực tiếp Set<String>, không cần serialize thủ công
-        Mono<?> savePerms = permissionsMono.flatMap(perms ->
-                redisTemplate.opsForValue().set(PERM_PREFIX + sessionId, perms, accessTtl)
-        );
+                    // 👇 Thêm ROLE_roleName vào set permission
+                    permissions.add("ROLE_" + role.getName().toUpperCase());
 
-        // 3. Thêm Session ID và DeviceInfo vào Hash (SỬA ĐỔI)
-        Mono<?> saveSession = sessionService.addSession(userId, sessionId, deviceInfo);
+                    Mono<Boolean> savePerms = redisTemplate.opsForSet()
+                            .add("PERM:" + sessionId, permissions.toArray())
+                            .then(redisTemplate.expire("PERM:" + sessionId, accessTtl))
+                            .thenReturn(true);
 
-        return Mono.when(savePerms, saveSession).then();
+
+                    // Lưu session info
+                    Mono<?> saveSession = sessionService.addSession(userId, sessionId, deviceInfo);
+
+                    // Chạy song song
+                    return Mono.when(savePerms, saveSession).then();
+                });
     }
+
 
     private Mono<Void> deletePermissions(String sessionId) {
         String key = PERM_PREFIX + sessionId;

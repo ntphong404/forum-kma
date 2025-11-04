@@ -37,6 +37,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.13")
+    implementation("org.apache.commons:commons-lang3:3.18.0")
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 

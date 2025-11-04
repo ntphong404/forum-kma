@@ -1,5 +1,5 @@
 jwt:
   secret: "Y+kWyBdMlAXGAOBNFqMYjeo7h80XdXp91h4h4tFt8al8GavcsHcJQXxr3IQguTrc/4PwEP4y50ITA6ozox59RQ=="
-#  issuer: "forum-kma"
-#  accessExpirationMs: 3600000       # 1 giờ
-#  refreshExpirationMs: 86400000     # 24 giờ
+  issuer: "forum-kma"
+  accessExpirationMs: 3600000       # 1 giờ
+  refreshExpirationMs: 86400000     # 24 giờ

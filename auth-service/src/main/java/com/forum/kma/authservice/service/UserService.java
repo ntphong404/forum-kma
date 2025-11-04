@@ -46,9 +46,7 @@ public class UserService {
                 .map(Authentication::getPrincipal)
                 .cast(User.class)
 
-                .flatMap(userPrincipal -> {
-                    return this.getUserById(userPrincipal.getId());
-                })
+                .flatMap(userPrincipal -> this.getUserById(userPrincipal.getId()))
 
                 .switchIfEmpty(Mono.error(new AppException(AuthErrorCode.USER_NOT_EXISTED)));
     }
