@@ -1,7 +1,7 @@
 package com.forum.kma.authservice.controller;
 
 import com.forum.kma.common.dto.response.ApiResponse;
-import com.forum.kma.authservice.dto.RoleRequest;
+import com.forum.kma.authservice.dto.request.RoleRequest;
 import com.forum.kma.authservice.model.Role;
 import com.forum.kma.authservice.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController

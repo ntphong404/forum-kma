@@ -10,7 +10,8 @@ public enum CommonErrorCode implements ErrorCode {
   UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
   UNAUTHORIZED(403, "Unauthorized", HttpStatus.FORBIDDEN),
   ROLE_NOT_EXISTED(404, "Role not existed", HttpStatus.NOT_FOUND),
-  INTERNAL_ERROR(400, "Internal error" , HttpStatus.INTERNAL_SERVER_ERROR ),;
+  INTERNAL_ERROR(400, "Internal error" , HttpStatus.INTERNAL_SERVER_ERROR ),
+  INVALID_ARGUMENT(400, "Invalid argument", HttpStatus.BAD_REQUEST),;
 
   private final int code;
   private final String message;

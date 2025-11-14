@@ -1,4 +1,4 @@
-package com.forum.kma.authservice.dto;
+package com.forum.kma.authservice.dto.request;
 
 import lombok.Data;
 

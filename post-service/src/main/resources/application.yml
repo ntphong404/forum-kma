@@ -22,6 +22,18 @@ spring:
   cache:
     type: redis
 
+  kafka:
+    bootstrap-servers: localhost:7092
+    properties:
+      security.protocol: SASL_PLAINTEXT
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="123456";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    template:
+      default-topic: post-topic
+
 eureka:
   client:
     service-url:

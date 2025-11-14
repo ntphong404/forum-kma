@@ -1,4 +1,4 @@
-package com.forum.kma.authservice.dto;
+package com.forum.kma.authservice.dto.request;
 
 import lombok.Data;
 
@@ -8,4 +8,6 @@ public class UserRequest {
   private String password;
   private String email;
   private String roleId;
+  private String userStatus; // optional: PENDING, ACTIVE, BANNED
+  private Boolean is2FAEnabled;
 }

@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private static final String USER_ID_HEADER = "X-User-Id";
     private static final String SESSION_ID_HEADER = "X-Session-Id";
-    private static final String REDIS_SESSION_KEY_PREFIX = "PERM:";
+    private static final String REDIS_SESSION_KEY_PREFIX = "perm:";
 
     // Cache tạm thời các quyền để giảm tải Redis
     private final ConcurrentHashMap<String, List<GrantedAuthority>> cache = new ConcurrentHashMap<>();
@@ -62,7 +62,7 @@ public class SecurityConfig {
 
             String redisKey = REDIS_SESSION_KEY_PREFIX + sessionId;
 
-            // 1️⃣ Kiểm tra cache
+            // Kiểm tra cache
             List<GrantedAuthority> cached = cache.get(redisKey);
             if (cached != null) {
                 log.debug("Cache hit for session {} on {}", sessionId, uri);
@@ -71,7 +71,7 @@ public class SecurityConfig {
                         .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
             }
 
-            // 2️⃣ Nếu không có cache, lấy từ Redis (Set)
+            // Nếu không có cache, lấy từ Redis (Set)
             return redisTemplate.opsForSet().members(redisKey)
                     .collectList()
                     .flatMap(permissions -> {

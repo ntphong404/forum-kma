@@ -1,6 +1,6 @@
 package com.forum.kma.authservice.service;
 
-import com.forum.kma.authservice.dto.RoleRequest;
+import com.forum.kma.authservice.dto.request.RoleRequest;
 import com.forum.kma.authservice.model.Role;
 import com.forum.kma.authservice.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;

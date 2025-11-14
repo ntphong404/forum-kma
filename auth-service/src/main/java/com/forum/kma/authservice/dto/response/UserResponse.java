@@ -1,4 +1,4 @@
-package com.forum.kma.authservice.dto;
+package com.forum.kma.authservice.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,4 +10,6 @@ public class UserResponse {
   private String username;
   private String email;
   private String roleId;
+  private String userStatus;
+  private Boolean is2FAEnabled;
 }

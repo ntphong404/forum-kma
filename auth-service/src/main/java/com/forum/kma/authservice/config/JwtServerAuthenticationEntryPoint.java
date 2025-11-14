@@ -27,6 +27,12 @@ public class JwtServerAuthenticationEntryPoint implements ServerAuthenticationEn
       String body = objectMapper.writeValueAsString(apiResponse);
       DataBufferFactory bufferFactory = exchange.getResponse().bufferFactory();
       DataBuffer buffer = bufferFactory.wrap(body.getBytes(StandardCharsets.UTF_8));
+
+      // If response already committed, avoid writing headers/body again
+      if (exchange.getResponse().isCommitted()) {
+        return exchange.getResponse().setComplete();
+      }
+
       exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
       exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
       return exchange.getResponse().writeWith(Mono.just(buffer));

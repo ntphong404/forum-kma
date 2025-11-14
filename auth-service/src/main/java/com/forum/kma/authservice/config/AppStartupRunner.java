@@ -21,87 +21,82 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class AppStartupRunner implements CommandLineRunner {
-  private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
-  private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-  @Override
-  public void run(String... args) {
-    log.info("Starting database initialization...");
+    @Override
+    public void run(String... args) {
+        log.info("Starting database initialization...");
 
-    // 1. Định nghĩa Permissions (sử dụng Enum Permission đã đổi tên)
-    Set<String> adminPermissions = Permission.getPermissionsAsStrings(
-            Permission.USER_CREATE,
-            Permission.USER_READ,
-            Permission.USER_UPDATE,
-            Permission.USER_DELETE,
+        // === 1. Define Permissions ===
+        Set<String> adminPermissions = Permission.getPermissionsAsStrings(
+                Permission.USER_CREATE,
+                Permission.USER_READ,
+                Permission.USER_UPDATE,
+                Permission.USER_DELETE,
+                Permission.ROLE_MANAGEMENT,
+                Permission.POST_CREATE,
+                Permission.POST_READ,
+                Permission.POST_DELETE,
+                Permission.CONFIG_ACCESS
+        );
 
-            Permission.ROLE_MANAGEMENT,
+        Set<String> userPermissions = Permission.getPermissionsAsStrings(
+                Permission.USER_READ,
+                Permission.USER_UPDATE,
+                Permission.USER_DELETE,
+                Permission.POST_CREATE,
+                Permission.POST_READ,
+                Permission.POST_UPDATE,
+                Permission.POST_DELETE
+        );
 
-            Permission.POST_CREATE,
-            Permission.POST_READ,
-            Permission.POST_DELETE,
-            Permission.CONFIG_ACCESS
-    );
-    Set<String> userPermissions = Permission.getPermissionsAsStrings(
-            Permission.USER_READ,
-            Permission.USER_UPDATE,
-            Permission.USER_DELETE,
+        Set<String> guestPermissions = Set.of();
 
-            Permission.POST_CREATE,
-            Permission.POST_READ,
-            Permission.POST_UPDATE,
-            Permission.POST_DELETE
-    );
+        // === 2. Create or find roles ===
+        Mono<Role> adminRoleMono = createRoleIfNotExist("ADMIN", adminPermissions);
+        Mono<Role> userRoleMono = createRoleIfNotExist("USER", userPermissions);
+        Mono<Role> guestRoleMono = createRoleIfNotExist("GUEST", guestPermissions);
 
+        // === 3. Combine all roles & ensure admin user exists ===
+        Mono.zip(adminRoleMono, userRoleMono, guestRoleMono)
+                .flatMap(tuple -> {
+                    Role adminRole = tuple.getT1();
 
-    // 2. Tạo hoặc Tìm kiếm Admin Role và User Role
-    Mono<Role> adminRoleMono = roleRepository.findByName("ADMIN")
-            .switchIfEmpty(Mono.defer(() -> {
-              log.info("Creating ADMIN role...");
-              return roleRepository.insert(Role.builder()
-                      .name("ADMIN")
-                      .permissions(adminPermissions)
-                      .build())
-                      .onErrorMap(DuplicateKeyException.class, ex -> new AppException(AuthErrorCode.SOMETHING_WRONG));
-            }));
+                    // Create admin user if missing
+                    return userRepository.findByUsername("admin")
+                            .switchIfEmpty(Mono.defer(() -> {
+                                log.info("Creating admin user...");
+                                return userRepository.insert(User.builder()
+                                                .username("admin")
+                                                .email("admin@forumkma.com")
+                                                .password(passwordEncoder.encode("admin123"))
+                                                .roleId(adminRole.getId())
+                                                .is2FAEnabled(false)
+                                                .userStatus(User.UserStatus.ACTIVE)
+                                                .build())
+                                        .onErrorMap(DuplicateKeyException.class,
+                                                ex -> new AppException(AuthErrorCode.DATABASE_SAVE_FAILED));
+                            }));
+                })
+                .subscribe(
+                        user -> log.info("✅ Database initialization successful. Admin user ready: {}", user.getUsername()),
+                        error -> log.error("❌ Database initialization failed: {}", error.getMessage())
+                );
+    }
 
-    Mono<Role> userRoleMono = roleRepository.findByName("USER")
-            .switchIfEmpty(Mono.defer(() -> {
-              log.info("Creating USER role...");
-              return roleRepository.insert(Role.builder()
-                      .name("USER")
-                      .permissions(userPermissions)
-                      .build())
-                      .onErrorMap(DuplicateKeyException.class, ex -> new AppException(AuthErrorCode.SOMETHING_WRONG));
-            }));
+    private Mono<Role> createRoleIfNotExist(String name, Set<String> permissions) {
+        log.info("Create role {} if not exist", name);
+        return roleRepository.findByName(name)
+                .switchIfEmpty(Mono.defer(() ->
+                        roleRepository.insert(Role.builder()
+                                        .name(name)
+                                        .permissions(permissions)
+                                        .build())
+                                .doOnSuccess(role -> log.info("Created role with name: {}", role.getName()))
+                                .onErrorMap(DuplicateKeyException.class, ex -> new AppException(AuthErrorCode.DATABASE_SAVE_FAILED))
+                ));
+    }
 
-
-    // 3. Kết hợp 2 Mono Role và tạo Admin User
-    Mono.zip(adminRoleMono, userRoleMono)
-            .flatMap(tuple -> {
-              Role adminRole = tuple.getT1();
-              Role userRole = tuple.getT2();
-
-               log.info("Admin Role ID: {}", adminRole.getId());
-              log.info("User Role ID: {}", userRole.getId());
-
-              // Tạo user admin nếu chưa có, sử dụng Admin Role ID
-              return userRepository.findByUsername("admin")
-                      .switchIfEmpty(Mono.defer(() -> {
-                        log.info("Creating admin user...");
-                        return userRepository.insert(User.builder()
-                                .username("admin")
-                                .email("admin@forumkma.com")
-                                .password(passwordEncoder.encode("admin123"))
-                                .roleId(adminRole.getId()) // Lấy ID của Admin Role
-                                .build())
-                                .onErrorMap(DuplicateKeyException.class, ex -> new AppException(AuthErrorCode.SOMETHING_WRONG));
-                      }));
-            })
-            .subscribe(
-                    user -> log.info("✅ Database initialization successful. Admin user ready: {}", user.getUsername()),
-                    error -> log.error("❌ Database initialization failed: {}", error.getMessage())
-            );
-  }
 }

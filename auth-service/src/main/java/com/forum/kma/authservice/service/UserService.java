@@ -1,8 +1,8 @@
 package com.forum.kma.authservice.service;
 
 import com.forum.kma.authservice.constant.AuthErrorCode;
-import com.forum.kma.authservice.dto.UserRequest;
-import com.forum.kma.authservice.dto.UserResponse;
+import com.forum.kma.authservice.dto.request.UserRequest;
+import com.forum.kma.authservice.dto.response.UserResponse;
 import com.forum.kma.authservice.model.User;
 import com.forum.kma.authservice.repository.UserRepository;
 import com.forum.kma.common.exception.AppException;
@@ -12,7 +12,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import com.forum.kma.authservice.dto.PageResponse;
+import com.forum.kma.authservice.dto.response.PageResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +57,8 @@ public class UserService {
         .password(request.getPassword())
         .email(request.getEmail())
         .roleId(request.getRoleId())
+        .userStatus(request.getUserStatus() != null ? User.UserStatus.valueOf(request.getUserStatus()) : User.UserStatus.PENDING)
+        .is2FAEnabled(request.getIs2FAEnabled() != null ? request.getIs2FAEnabled() : false)
         .build();
     return userRepository.save(user).map(this::toResponse);
   }
@@ -68,6 +70,8 @@ public class UserService {
           existing.setPassword(request.getPassword());
           existing.setEmail(request.getEmail());
           existing.setRoleId(request.getRoleId());
+          if (request.getUserStatus() != null) existing.setUserStatus(User.UserStatus.valueOf(request.getUserStatus()));
+          if (request.getIs2FAEnabled() != null) existing.setIs2FAEnabled(request.getIs2FAEnabled());
           return userRepository.save(existing);
         })
         .map(this::toResponse);
@@ -78,6 +82,13 @@ public class UserService {
   }
 
   private UserResponse toResponse(User user) {
-    return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRoleId());
+    return new UserResponse(
+        user.getId(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getRoleId(),
+        user.getUserStatus() != null ? user.getUserStatus().name() : null,
+        user.getIs2FAEnabled()
+    );
   }
 }

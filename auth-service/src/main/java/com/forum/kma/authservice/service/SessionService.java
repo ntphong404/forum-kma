@@ -1,6 +1,6 @@
 package com.forum.kma.authservice.service;
 
-import com.forum.kma.authservice.dto.DeviceInfo;
+import com.forum.kma.authservice.dto.response.DeviceInfo;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -79,5 +79,10 @@ public class SessionService {
         String key = createKey(userId);
         // HGETALL: Lấy tất cả field-value
         return reactiveRedisTemplate.opsForHash().entries(key);
+    }
+
+    public Flux<Map.Entry<String, DeviceInfo>> getAllSessionsTyped(String userId) {
+        return getAllSessions(userId)
+                .map(entry -> Map.entry((String) entry.getKey(), (DeviceInfo) entry.getValue()));
     }
 }

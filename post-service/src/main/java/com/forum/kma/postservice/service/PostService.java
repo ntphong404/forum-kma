@@ -1,8 +1,10 @@
 package com.forum.kma.postservice.service;
 
 import com.forum.kma.common.exception.AppException;
+import com.forum.kma.postservice.dto.CreatePostRequest;
 import com.forum.kma.postservice.dto.UpdatePostRequest;
 import com.forum.kma.postservice.exception.PostErrorCode;
+import com.forum.kma.postservice.mapper.PostMapper;
 import com.forum.kma.postservice.model.Post;
 import com.forum.kma.postservice.repository.PostRepository;
 import lombok.AccessLevel;
@@ -19,7 +21,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class PostService {
     PostRepository postRepository;
-
+    PostMapper postMapper;
+    PostEventProducer postEventProducer;
     public Flux<Post> getAll(int page, int limit, String search) {
         int offset = page * limit;
         return postRepository.findAllPostWithPagination(search, offset, limit);
@@ -41,7 +44,7 @@ public class PostService {
                 .switchIfEmpty(Mono.error(new AppException(PostErrorCode.RESOURCE_NOT_FOUND)));
     }
 
-    public Mono<Post> createPost(String authorId, com.forum.kma.postservice.dto.CreatePostRequest req) {
+    public Mono<Post> createPost(String authorId, CreatePostRequest req) {
         Post post = Post.builder()
                 .title(req.title())
                 .content(req.content())
@@ -50,8 +53,15 @@ public class PostService {
                 .reactionCount(0)
                 .build();
 
-        return postRepository.save(post).map(Post::asNotNew);
+        // Lưu post, sau đó gửi event
+        return postRepository.save(post)
+                .map(Post::asNotNew)
+                .flatMap(savedPost ->
+                        postEventProducer.sendPostEvent(postMapper.toEvent(savedPost))
+                                .thenReturn(savedPost) // trả về post sau khi gửi event
+                );
     }
+
 
     public Mono<Post> getPostById(String postId) {
         return postRepository.findById(postId);

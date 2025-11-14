@@ -1,4 +1,4 @@
-package com.forum.kma.authservice.dto;
+package com.forum.kma.authservice.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

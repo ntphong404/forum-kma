@@ -1,19 +1,23 @@
 package com.forum.kma.postservice.service;
 
+import com.forum.kma.postservice.dto.CreateCommentRequest;
 import com.forum.kma.postservice.model.Comment;
 import com.forum.kma.postservice.repository.CommentRepository;
+import com.forum.kma.postservice.repository.PostRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentService {
 
-    private final CommentRepository commentRepository;
+    CommentRepository commentRepository;
+    PostRepository postRepository;
 
     public Flux<Comment> getCommentsByPost(String postId, int page, int size) {
         long offset = (long) page * size;
@@ -28,14 +32,19 @@ public class CommentService {
         return commentRepository.deleteById(id);
     }
 
-    public Mono<Comment> createComment(String authorId, com.forum.kma.postservice.dto.CreateCommentRequest req) {
-        Comment comment = Comment.builder()
-                .postId(req.postId())
-                .authorId(authorId)
-                .content(req.content())
-                .reactionCount(0)
-                .build();
+    public Mono<Comment> createComment(String authorId, CreateCommentRequest req) {
+        return postRepository.findById(req.postId())
+                .switchIfEmpty(Mono.error(new RuntimeException("Post not found")))
+                .flatMap(post -> {
+                    Comment comment = Comment.builder()
+                            .postId(req.postId())
+                            .authorId(authorId)
+                            .content(req.content())
+                            .reactionCount(0)
+                            .build();
 
-        return commentRepository.save(comment);
+                    return commentRepository.save(comment);
+                });
     }
+
 }

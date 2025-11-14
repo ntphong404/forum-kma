@@ -1,14 +1,14 @@
 package com.forum.kma.authservice.controller;
 
-import com.forum.kma.authservice.dto.UserRequest;
-import com.forum.kma.authservice.dto.UserResponse;
+import com.forum.kma.authservice.dto.request.UserRequest;
+import com.forum.kma.authservice.dto.response.UserResponse;
 import com.forum.kma.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import com.forum.kma.common.dto.response.ApiResponse;
-import com.forum.kma.authservice.dto.PageResponse;
+import com.forum.kma.authservice.dto.response.PageResponse;
 
 @RestController
 @RequestMapping("/users")

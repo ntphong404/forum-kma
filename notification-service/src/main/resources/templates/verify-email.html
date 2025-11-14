@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Verify your email</title>
+    <style>
+        /* Core styles inlined for better email client support */
+        body {
+            background-color: #f4f6fb;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 30px 16px;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(13, 110, 253, 0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #0d6efd 0%, #5aa0ff 100%);
+            color: #fff;
+            padding: 22px 24px;
+            text-align: left;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .card-body {
+            padding: 28px 24px;
+            color: #1f2937;
+        }
+
+        .lead {
+            font-size: 15px;
+            color: #374151;
+            margin-bottom: 18px;
+        }
+
+        .otp {
+            display: inline-block;
+            background: #0d6efd;
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: 3px;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            padding: 18px 8px;
+        }
+
+        @media screen and (max-width:420px) {
+            .card-body {
+                padding: 18px 14px;
+            }
+
+            .otp {
+                font-size: 20px;
+                padding: 12px 18px;
+            }
+        }
+    </style>
+    <!-- Optional webfonts or external CSS omitted for maximum inbox compatibility -->
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="email-container">
+            <div class="card">
+                <div class="header">
+                    <div class="brand">Forum KMA</div>
+                </div>
+                <div class="card-body">
+                    <h3 style="margin-top:0; margin-bottom:6px;">Hello, <span th:text="${name}">there</span></h3>
+                    <p class="lead">Please use the code below to verify your email address for your Forum KMA account.
+                    </p>
+
+                    <div style="text-align:center; margin:26px 0;">
+                        <span class="otp" th:text="${otp}">123456</span>
+                    </div>
+
+                    <p class="muted">This code will expire in 5 minutes. If you did not request this, you can safely
+                        ignore this email.</p>
+
+                    <hr style="border:none; border-top:1px solid #eef2ff; margin:20px 0;" />
+                    <p class="muted" style="margin:0;">If you need help, contact our support at <a
+                            href="mailto:support@forum-kma.local">support@forum-kma.local</a></p>
+                </div>
+            </div>
+            <div class="footer">Forum KMA — secure and reliable forum services</div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -43,6 +43,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 
+    implementation("io.projectreactor.kafka:reactor-kafka")
+    implementation("org.apache.kafka:kafka-clients")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")

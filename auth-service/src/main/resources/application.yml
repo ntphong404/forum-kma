@@ -28,7 +28,19 @@ eureka:
     hostname: localhost
     instance-id: ${spring.application.name}:${server.port}
 
+  kafka:
+    bootstrap-servers: localhost:7092
+    properties:
+      security.protocol: SASL_PLAINTEXT
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="123456";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    template:
+      default-topic: auth-topic
 
-internal:
-  gateway:
-    secret-key: "YOUR_VERY_STRONG_INTERNAL_SHARED_SECRET_KEY_12345"
+
+#internal:
+#  gateway:
+#    secret-key: "YOUR_VERY_STRONG_INTERNAL_SHARED_SECRET_KEY_12345"

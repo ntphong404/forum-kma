@@ -1,0 +1,40 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: Notification-Service
+  webflux:
+    base-path: /api
+
+  kafka:
+    bootstrap-servers: localhost:7092
+    consumer:
+      group-id: notify-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.forum.kma.*"
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="123456";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="123456";
+
+
+
+email:
+  brevo:
+    url: https://api.brevo.com/v3/smtp/email
+    apiKey: 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
+    sender:
+      name: "Forum KMA"
+      email: "dinhhonghai3132004@gmail.com"
+
+

@@ -20,6 +20,19 @@ public class User {
     private String username;
     private String password;
     private String email;
-
     private String roleId; // Lưu id hoặc name của role
+
+    // Trạng thái user
+    @Builder.Default
+    private UserStatus userStatus = UserStatus.PENDING;
+
+    // 2FA flag
+    @Builder.Default
+    private Boolean is2FAEnabled = false;
+
+    public enum UserStatus {
+        PENDING,
+        ACTIVE,
+        BANNED
+    }
 }

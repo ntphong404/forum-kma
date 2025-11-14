@@ -1,0 +1,1027 @@
+{
+	"info": {
+		"_postman_id": "f48f210e-9c98-4475-ae4c-5b5fcbb4969d",
+		"name": "forum-kma",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "43332342",
+		"_collection_link": "https://lively-firefly-950605.postman.co/workspace/Forum-Kma~bb174fce-e8aa-4535-bc1e-d4a2432599ce/collection/43332342-f48f210e-9c98-4475-ae4c-5b5fcbb4969d?action=share&source=collection_link&creator=43332342"
+	},
+	"item": [
+		{
+			"name": "auth-service",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.environment.set(\"accessToken\", response.result.accessToken);\r",
+											"    pm.environment.set(\"refreshToken\", response.result.refreshToken);\r",
+											"\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"john1234\",\r\n    \"password\":\"john1234\",\r\n    \"email\":\"john1234@yopmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{auth}}/api/auth/register"
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.environment.set(\"accessToken\", response.result.accessToken);\r",
+											"    pm.environment.set(\"refreshToken\", response.result.refreshToken);\r",
+											"\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "// { \"username\":\"phongdz\", \"password\":\"phong2004\"}\r\n// { \"username\":\"admin\", \"password\":\"admin123\"}\r\n{\"username\":\"john1234\", \"password\":\"john1234\"}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/login"
+							},
+							"response": []
+						},
+						{
+							"name": "refresh",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.environment.set(\"accessToken\", response.result.accessToken);\r",
+											"    pm.environment.set(\"refreshToken\", response.result.refreshToken);\r",
+											"\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\":\"{{refreshToken}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/refresh"
+							},
+							"response": []
+						},
+						{
+							"name": "login verify",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {\r",
+											"    const response = pm.response.json();\r",
+											"\r",
+											"    pm.environment.set(\"accessToken\", response.result.accessToken);\r",
+											"    pm.environment.set(\"refreshToken\", response.result.refreshToken);\r",
+											"\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"ntphong2k4cb@gmail.com\", \"otp\": \"159810\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/login/verify"
+							},
+							"response": []
+						},
+						{
+							"name": "step1 forgot password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"john1234@yopmail.com\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/forgot-password"
+							},
+							"response": []
+						},
+						{
+							"name": "step2 verify otp",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"john1234@yopmail.com\", \"otp\": \"304279\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/verify-otp"
+							},
+							"response": []
+						},
+						{
+							"name": "step3 reset password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"john1234@yopmail.com\", \"otp\": \"304279\", \"newPassword\": \"newpass123\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/reset-password"
+							},
+							"response": []
+						},
+						{
+							"name": "internal permission by role",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Internal-Secret",
+										"value": "YOUR_VERY_STRONG_INTERNAL_SHARED_SECRET_KEY_12345",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin123\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/internal/permissions/:roleId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"internal",
+										"permissions",
+										":roleId"
+									],
+									"variable": [
+										{
+											"key": "roleId",
+											"value": "68ffc566de1fe0f94b2cc703"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/users?page=0&size=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get me",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{gateway}}/api/users/me"
+							},
+							"response": []
+						},
+						{
+							"name": "step1 forgot password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"john1234@yopmail.com\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/forgot-password"
+							},
+							"response": []
+						},
+						{
+							"name": "step2 verify otp",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"john1234@yopmail.com\", \"otp\": \"304279\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/verify-otp"
+							},
+							"response": []
+						},
+						{
+							"name": "step3 reset password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"email\": \"john1234@yopmail.com\", \"otp\": \"304279\", \"newPassword\": \"newpass123\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/reset-password"
+							},
+							"response": []
+						},
+						{
+							"name": "list sessions",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{gateway}}/api/auth/sessions"
+							},
+							"response": []
+						},
+						{
+							"name": "get all roles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway}}/api/roles?page=0&size=10",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"roles"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "step1 change-password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"oldPassword\": \"phongdz2k4\", \"newPassword\": \"phong2004\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/change-password"
+							},
+							"response": []
+						},
+						{
+							"name": "step2 change-password verify",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"otp\": \"172901\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{gateway}}/api/auth/change-password/verify"
+							},
+							"response": []
+						},
+						{
+							"name": "step1 verify email",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": "{{gateway}}/api/auth/verify-email"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "session",
+					"item": [
+						{
+							"name": "list sessions",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{gateway}}/api/auth/sessions"
+							},
+							"response": []
+						},
+						{
+							"name": "revoke session",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway}}/api/auth/sessions/:sessionId",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"sessions",
+										":sessionId"
+									],
+									"variable": [
+										{
+											"key": "sessionId",
+											"value": "<sessionId>"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "revoke all sessions",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{gateway}}/api/auth/sessions"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "internal request",
+					"item": [
+						{
+							"name": "internal permission by role",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{accessToken}}"
+									}
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Internal-Secret",
+										"value": "YOUR_VERY_STRONG_INTERNAL_SHARED_SECRET_KEY_12345",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin123\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/internal/permissions/:roleId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"internal",
+										"permissions",
+										":roleId"
+									],
+									"variable": [
+										{
+											"key": "roleId",
+											"value": "68ffc566de1fe0f94b2cc703"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "post-service",
+			"item": [
+				{
+					"name": "create post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "68ffc566de1fe0f94b2cc705",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "X-Session-Id",
+								"value": "75280f85-2895-46f4-b083-e0a16146c750",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"test kaffka aaaa\",\r\n    \"content\":\"hiiii\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{gateway}}/api/posts"
+					},
+					"response": []
+				},
+				{
+					"name": "get post",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newTitle\":\"Chao ae nha\",\r\n    \"newContent\":\"hiiii\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{gateway}}/api/posts/79f1e66b-db38-4f8e-8d21-dde5a125686b"
+					},
+					"response": []
+				},
+				{
+					"name": "get post by author id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newTitle\":\"Chao ae nha\",\r\n    \"newContent\":\"hiiii\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/posts/author/4d5ff976-0d1f-49f3-a92c-7a448776701c",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"author",
+								"4d5ff976-0d1f-49f3-a92c-7a448776701c"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "nha",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "comment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "68ffc566de1fe0f94b2cc705",
+								"type": "text"
+							},
+							{
+								"key": "X-Session-Id",
+								"value": "75280f85-2895-46f4-b083-e0a16146c750",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"aaa\",\r\n    \"content\":\"bbb\"\r\n}"
+						},
+						"url": {
+							"raw": "{{gateway}}/api/comments/post?postId=73d42c7e-ecd6-49e0-82ce-f85b6bda2e1f",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"post"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "73d42c7e-ecd6-49e0-82ce-f85b6bda2e1f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "comment post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postId\":\"19a8362c-2894-4faa-bbae-8e1ab422a162\",\r\n    \"content\":\"OMG\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{gateway}}/api/comments"
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/api/posts?page=0&limit=2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "search",
+									"value": "tân",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "acl-service",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"type\": \"POST\",\r\n  \"objectId\": \"post_123\",\r\n  \"authorId\": \"user001\",\r\n  \"userId\": \"user002\",\r\n  \"roleName\": \"ADMIN\",\r\n  \"action\": \"UPDATE\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{acl_url}}/acl/check"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notification-service",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "ws://localhost:8090/ws/notifications?token={{accessToken}}",
+							"protocol": "ws",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"ws",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": ""
+					},
+					"response": []
+				},
+				{
+					"name": "bravo",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": {
+								"value": "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",
+								"key": "API-key",
+								"in": "header"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"sender\": {\n    \"name\": \"Forum KMA\",\n    \"email\": \"dinhhonghai3132004@gmail.com\"\n  },\n  \"to\": [\n    {\n      \"email\": \"devteria@yopmail.com\",\n      \"name\": \"john\"\n    }\n  ],\n  \"htmlContent\": \"<p>hhh</p>\",\n  \"subject\": \"Login Email confirmation\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://api.brevo.com/v3/smtp/email"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

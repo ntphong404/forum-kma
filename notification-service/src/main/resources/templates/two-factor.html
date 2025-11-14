@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Two-factor code</title>
+    <style>
+        body {
+            background-color: #f7fafc;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 28px 14px;
+        }
+
+        .email-container {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(2, 6, 23, 0.06);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #10b981;
+            color: #fff;
+            padding: 16px 18px;
+        }
+
+        .brand {
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 22px;
+            text-align: center;
+        }
+
+        .otp {
+            display: inline-block;
+            background: #059669;
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 3px;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="email-container">
+            <div class="card">
+                <div class="header">
+                    <div class="brand">Forum KMA</div>
+                </div>
+                <div class="card-body">
+                    <h3 style="margin:0 0 8px 0;">Two-factor authentication code</h3>
+                    <p style="margin:0 0 18px 0; color:#374151;">Use the code below to complete your sign in.</p>
+                    <div style="margin:18px 0;">
+                        <span class="otp" th:text="${otp}">000000</span>
+                    </div>
+                    <p class="muted" style="margin-top:6px;">If you did not attempt to sign in, please secure your
+                        account immediately.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
